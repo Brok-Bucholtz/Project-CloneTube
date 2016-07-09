@@ -54,12 +54,7 @@ def get_user_subscription_videos(user_id):
     return _mongo_to_json_response(mongo.db.subscriptions.find().sort({'_id':-1}))
 
 
-
-
-
-
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key_that_no_one_can_break_in'
     app.debug = True
     app.run(host='0.0.0.0', port=7000)
-
