@@ -1,7 +1,6 @@
 from bson import json_util
-from flask import Flask, request, Response
+from flask import Flask, request, Response, render_template
 from flask_pymongo import PyMongo
-from flask import request, render_template, jsonify
 
 
 app = Flask(__name__)
