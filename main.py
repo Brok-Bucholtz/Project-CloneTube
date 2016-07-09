@@ -21,7 +21,7 @@ def home_page():
 
 @app.route('/home/video/<int:video_id>/')
 def view_video_page(video_id):
-   video = mongo.db.videos.find({'id': video_id})
+   video = mongo.db.videos.find({'video_id': video_id})
    return render_template('video_page.html', video=video)
 
 
@@ -49,9 +49,18 @@ def post_video_comments(video_id):
     return _mongo_to_json_response(mongo.db.comments.insert(comment))
 
 
-@app.route('/home/videos/video_data/<int:video_id>')    
+@app.route('/home/videos/video_data/<int:video_id>')
 def get_video_data(video_id):
     return _mongo_to_json_response(mongo.db.videos.find({'video_id': video_id}))
+
+
+@app.route('/home/users/<int:user_id>')
+def get_user_subscription_videos(user_id):
+    subscriptions = mongo.db.users.find({'user_id': user_id}, {'subscriptions': 1})
+    return _mongo_to_json_response(mongo.db.subscriptions.find().sort({'_id':-1}))
+
+
+
 
 
 
