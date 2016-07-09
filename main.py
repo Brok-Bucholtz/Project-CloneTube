@@ -1,14 +1,31 @@
 from bson import json_util
 from flask import Flask, request, Response, render_template
+from flask_login import LoginManager, UserMixin, login_user
 from flask_pymongo import PyMongo
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app = Flask(__name__)
 mongo = PyMongo(app)
+login_manager = LoginManager(app)
+
+
+class User(UserMixin):
+    def __init__(self, id):
+        self.id = id
+
+    @staticmethod
+    def get(user_id):
+        return User(user_id)
 
 
 def _mongo_to_json_response(mongo):
     return Response(json_util.dumps(mongo, indent=4, sort_keys=True), mimetype="application/json")
+
+
+@login_manager.user_loader
+def _login_manager_load_user(user_id):
+    return User.get(user_id)
 
 
 @app.route('/')
@@ -52,6 +69,24 @@ def get_video_data(video_id):
 def get_user_subscription_videos(user_id):
     subscriptions = mongo.db.users.find({'user_id': user_id}, {'subscriptions': 1})
     return _mongo_to_json_response(mongo.db.subscriptions.find().sort({'_id':-1}))
+
+
+@app.route('/api/v1/users', methods=['POST'])
+def post_user():
+    user = request.get_json()
+    user['password'] = generate_password_hash(user['password'])
+    return _mongo_to_json_response(mongo.db.users.insert(user))
+
+
+@app.route('/api/v1/users/login', methods=['POST'])
+def post_user_login():
+    user = request.get_json()
+    mongo_user = mongo.db.users.find_one({'name': user['name']})
+
+    if mongo_user and check_password_hash(mongo_user['password'], user['password']):
+        login_user(User(mongo_user['_id']))
+        return 'Success'
+    return 'Failure'
 
 
 if __name__ == '__main__':
