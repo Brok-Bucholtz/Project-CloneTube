@@ -12,4 +12,3 @@ def build_route(app):
     app.register_blueprint(account_api_routes, url_prefix='/api/v1')
     app.register_blueprint(video_api_routes, url_prefix='/api/v1')
     app.register_blueprint(new_videos_routes, url_prefix="/api/v1/video/")
-    app.register_blueprint(view_video_routes, url_prefix="/api/v1/video/")
