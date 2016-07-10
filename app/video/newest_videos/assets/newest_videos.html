@@ -1,0 +1,19 @@
+<!Doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Most Recent</title>
+</head>
+<body>
+	{% for i in newest_videos %}
+	<div id="video">
+		<div class="thumbnail"> i.thumbnail </div>
+		<div class="name"> i.name </div>
+		<div class="views"> i.views </div>
+		<div class="author"> i.author </div>
+		<div class="length"> i.length </div>
+		<div class="created"> i.created </div>
+	</div>
+	{% endfor %}
+</body>
+</html>
