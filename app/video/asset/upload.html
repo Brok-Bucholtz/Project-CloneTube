@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="{{ url_for('.static', filename='upload.js') }}" async></script>
+    <meta charset="UTF-8">
+    <title>Upload Video</title>
+</head>
+<body>
+    <form>
+        <label>Title</label><br/>
+        <input id="title" name="title"><br/>
+        <input type="file" id="file"  name="video file" accept="video/*"><br/>
+        <input type="button" value="Submit" onclick="upload_video();">
+    </form>
+</body>
+</html>
