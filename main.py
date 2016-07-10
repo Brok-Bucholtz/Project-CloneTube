@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
 
-from client.account.controller import account_routes
+from app.account.controller import account_routes
 
 app = Flask(__name__)
 mongo = PyMongo(app)
