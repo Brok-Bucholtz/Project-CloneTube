@@ -1,16 +1,13 @@
-from flask import Flask, request, render_template, send_from_directory
-from flask_login import LoginManager, UserMixin, login_user
-from flask_pymongo import PyMongo
+from flask import request, render_template, send_from_directory
+from flask_login import UserMixin, login_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
 
+from app.app import app, mongo, login_manager
 from app.account.controller import account_routes
 from app.helper import mongo_to_json_response
 
-app = Flask(__name__)
-mongo = PyMongo(app)
-login_manager = LoginManager(app)
 
 app.register_blueprint(account_routes, url_prefix='/account')
 
