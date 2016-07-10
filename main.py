@@ -22,12 +22,6 @@ def home_page():
     return render_template('home_page.html', videos=videos)
 
 
-@app.route('/home/users/<int:user_id>')
-def get_user_subscription_videos(user_id):
-    subscriptions = mongo.db.users.find({'user_id': user_id}, {'subscriptions': 1})
-    return mongo_to_json_response(mongo.db.subscriptions.find().sort({'_id':-1}))
-
-
 @app.route('/home/user/<int:user_id>/upload/', methods=['POST'])
 def upload_video(user_id):
     user = mongo.db.users.find_one({'user_id': user_id})

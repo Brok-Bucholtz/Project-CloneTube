@@ -41,6 +41,15 @@ def post_user_login():
     return 'Failure'
 
 
+@account_api_routes.route('/accounts/<int:user_id>/subscriptions')
+def get_user_subscription_videos(user_id):
+    user = mongo.db.users.find_one({'_id': user_id})
+
+    if user:
+        return user['subscriptions']
+    return 'Failure', 404
+
+
 @account_page_routes.route('/login')
 def login():
     return render_template('login.html')
