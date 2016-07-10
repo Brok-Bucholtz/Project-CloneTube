@@ -22,18 +22,6 @@ def home_page():
     return render_template('home_page.html', videos=videos)
 
 
-@app.route('/home/user/<int:user_id>/upload/', methods=['POST'])
-def upload_video(user_id):
-    user = mongo.db.users.find_one({'user_id': user_id})
-    if request.method == 'POST':
-        user['videos'] = mongo.db.video.insert({'name': request.form['name'], 'user_id': user_id})
-        if request.files['video_files']:
-            filename = upload_file(user_id)
-            saved_filename = str(filename)
-
-
-
-
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key_that_no_one_can_break_in'
     app.debug = True

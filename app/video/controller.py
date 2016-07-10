@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 import os
 
@@ -39,3 +40,11 @@ def post_video_comments(video_id):
     comment = request.get_json()
     comment['video_id'] = video_id
     return mongo_to_json_response(mongo.db.comments.insert(comment))
+
+
+@video_api_routes.route('/videos', methods=['POST'])
+@login_required
+def upload_video():
+    if request.method == 'POST':
+        filename = upload_file(current_user.get_id())
+        mongo.db.video.insert({'name': request.form['name'], 'user_id': current_user.get_id(), filename: filename})
