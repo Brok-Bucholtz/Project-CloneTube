@@ -1,15 +1,15 @@
 from flask import request, render_template, send_from_directory
-from flask_login import UserMixin, login_user
-from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
 
-from app.app import app, mongo, login_manager
+from app.app import app, mongo
 from app.account.controller import account_routes
 from app.helper import mongo_to_json_response
+from app.authentication.controller import authentication_api_routes
 
 
 app.register_blueprint(account_routes, url_prefix='/account')
+app.register_blueprint(authentication_api_routes, url_prefix='/api/v1/authentication')
 
 UPLOAD_FOLDER = 'static/data'
 ALLOWED_EXTENSIONS = set(['mp4', '3gp', 'ogg'])
@@ -32,20 +32,6 @@ def upload_file(user_id):
         f.save(os.path.join(directory_path, filename))
     return filename
 
-
-
-class User(UserMixin):
-    def __init__(self, id):
-        self.id = id
-
-    @staticmethod
-    def get(user_id):
-        return User(user_id)
-
-
-@login_manager.user_loader
-def _login_manager_load_user(user_id):
-    return User.get(user_id)
 
 
 @app.route('/')
@@ -89,24 +75,6 @@ def get_video_data(video_id):
 def get_user_subscription_videos(user_id):
     subscriptions = mongo.db.users.find({'user_id': user_id}, {'subscriptions': 1})
     return mongo_to_json_response(mongo.db.subscriptions.find().sort({'_id':-1}))
-
-
-@app.route('/api/v1/users', methods=['POST'])
-def post_user():
-    user = request.get_json()
-    user['password'] = generate_password_hash(user['password'])
-    return mongo_to_json_response(mongo.db.users.insert(user))
-
-
-@app.route('/api/v1/users/login', methods=['POST'])
-def post_user_login():
-    user = request.get_json()
-    mongo_user = mongo.db.users.find_one({'name': user['name']})
-
-    if mongo_user and check_password_hash(mongo_user['password'], user['password']):
-        login_user(User(mongo_user['_id']))
-        return 'Success'
-    return 'Failure'
 
 
 @app.route('/home/user/<int:user_id>/upload/', methods=['POST'])
