@@ -7,5 +7,6 @@ A hackathon app to duplicate the YouTube website in a weekend.
 
 ## Usage
 ```sh
+pip install -r requirements.txt
 python run.py
 ```
