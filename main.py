@@ -5,17 +5,13 @@ import os
 from app.app import app, mongo
 from app.account.controller import account_routes
 from app.helper import mongo_to_json_response
-<<<<<<< Updated upstream
 from app.authentication.controller import authentication_api_routes
-=======
 from app.video.newest_videos.controller import new_videos_routes
-
-
->>>>>>> Stashed changes
 
 
 app.register_blueprint(account_routes, url_prefix='/account')
 app.register_blueprint(authentication_api_routes, url_prefix='/api/v1/authentication')
+app.register_blueprint(new_videos_routes, url_prefix="/api/v1/videos/")
 
 UPLOAD_FOLDER = 'static/data'
 ALLOWED_EXTENSIONS = set(['mp4', '3gp', 'ogg'])
