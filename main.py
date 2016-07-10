@@ -3,11 +3,35 @@ from flask import Flask, request, Response, render_template
 from flask_login import LoginManager, UserMixin, login_user
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug import secure_filename
+import os
 
 
 app = Flask(__name__)
 mongo = PyMongo(app)
 login_manager = LoginManager(app)
+
+UPLOAD_FOLDER = 'static/data'
+ALLOWED_EXTENSIONS = set(['mp4', '3gp', 'ogg'])
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+def upload_file(user_id):
+    f = request.files['video_file']
+    if f and allowed_file(f.filename):
+        filename = secure_filename(f.filename)
+        directory_path = os.path.join(app.config['UPLOAD_FOLDER'], str(user_id))
+        if not os.path.exists(directory_path):
+            os.makedirs(directory_path)
+        f.save(os.path.join(directory_path, filename))
+    return filename
+
 
 
 class User(UserMixin):
@@ -87,6 +111,18 @@ def post_user_login():
         login_user(User(mongo_user['_id']))
         return 'Success'
     return 'Failure'
+
+
+@app.route('/home/user/<int:user_id>/upload/', methods=['POST'])
+def upload_video(user_id):
+    user = mongo.db.users.find_one({'user_id': user_id})
+    if request.method == 'POST':
+        user['videos'] = mongo.db.video.insert({'name': request.form['name'], 'user_id': user_id})
+        if request.files['video_files']:
+            filename = upload_file(user_id)
+            saved_filename = str(filename)
+
+
 
 
 if __name__ == '__main__':
