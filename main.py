@@ -6,10 +6,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
 
+from client.account.controller import account_routes
 
 app = Flask(__name__)
 mongo = PyMongo(app)
 login_manager = LoginManager(app)
+
+app.register_blueprint(account_routes, url_prefix='/account')
 
 UPLOAD_FOLDER = 'static/data'
 ALLOWED_EXTENSIONS = set(['mp4', '3gp', 'ogg'])
@@ -50,11 +53,6 @@ def _mongo_to_json_response(mongo):
 @login_manager.user_loader
 def _login_manager_load_user(user_id):
     return User.get(user_id)
-
-
-@app.route('/app/<path:path>')
-def send_js(path):
-    return send_from_directory('client', path)
 
 
 @app.route('/')
