@@ -7,11 +7,13 @@ from app.account.controller import account_page_routes
 from app.helper import mongo_to_json_response
 from app.authentication.controller import authentication_api_routes
 from app.video.newest_videos.controller import new_videos_routes
+from app.video.view_video.controller import view_video_routes
 
 
 app.register_blueprint(account_page_routes, url_prefix='/account')
 app.register_blueprint(authentication_api_routes, url_prefix='/api/v1/authentication')
-app.register_blueprint(new_videos_routes, url_prefix="/api/v1/videos/")
+app.register_blueprint(new_videos_routes, url_prefix="/api/v1/video/")
+app.register_blueprint(view_video_routes, url_prefix="/api/v1/video/")
 
 UPLOAD_FOLDER = 'static/data'
 ALLOWED_EXTENSIONS = set(['mp4', '3gp', 'ogg'])
@@ -43,12 +45,6 @@ def home_page():
     return render_template('home_page.html', videos=videos)
 
 
-@app.route('/home/video/<int:video_id>/')
-def view_video_page(video_id):
-    video = mongo.db.videos.find({'video_id': video_id})
-    return render_template('video_page.html', video=video)
-
-
 @app.route('/api/v1/videos/<int:video_id>/comments')
 def get_video_comments(video_id):
     return mongo_to_json_response(mongo.db.comments.find({'video_id': video_id}))
@@ -59,11 +55,6 @@ def post_video_comments(video_id):
     comment = request.get_json()
     comment['video_id'] = video_id
     return mongo_to_json_response(mongo.db.comments.insert(comment))
-
-
-@app.route('/home/videos/video_data/<int:video_id>')
-def get_video_data(video_id):
-    return mongo_to_json_response(mongo.db.videos.find({'video_id': video_id}))
 
 
 @app.route('/home/users/<int:user_id>')
