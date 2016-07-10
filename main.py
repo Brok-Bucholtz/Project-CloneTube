@@ -1,5 +1,5 @@
 from bson import json_util
-from flask import Flask, request, Response, render_template
+from flask import Flask, request, Response, render_template, send_from_directory
 from flask_login import LoginManager, UserMixin, login_user
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -50,6 +50,11 @@ def _mongo_to_json_response(mongo):
 @login_manager.user_loader
 def _login_manager_load_user(user_id):
     return User.get(user_id)
+
+
+@app.route('/app/<path:path>')
+def send_js(path):
+    return send_from_directory('client', path)
 
 
 @app.route('/')
