@@ -5,7 +5,13 @@ import os
 from app.app import app, mongo
 from app.account.controller import account_routes
 from app.helper import mongo_to_json_response
+<<<<<<< Updated upstream
 from app.authentication.controller import authentication_api_routes
+=======
+from app.video.newest_videos.controller import new_videos_routes
+
+
+>>>>>>> Stashed changes
 
 
 app.register_blueprint(account_routes, url_prefix='/account')
@@ -45,13 +51,6 @@ def home_page():
 def view_video_page(video_id):
     video = mongo.db.videos.find({'video_id': video_id})
     return render_template('video_page.html', video=video)
-
-
-@app.route('/home/videos/most_recent/')
-@app.route('/home/videos/trending/')
-def get_newest_video():
-    newest_videos = mongo.db.videos.find().sort({'_id':-1}).limit(10)
-    return render_template('recent_videos.html', newest_videos=newest_videos)
 
 
 @app.route('/api/v1/videos/<int:video_id>/comments')
