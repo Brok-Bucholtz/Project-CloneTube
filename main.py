@@ -3,7 +3,7 @@ from flask import Flask, request, Response, render_template, send_from_directory
 from flask_login import LoginManager, UserMixin, login_user
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 import os
 
 
