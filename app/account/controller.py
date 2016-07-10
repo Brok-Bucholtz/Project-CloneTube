@@ -2,7 +2,7 @@ from flask import Blueprint, request, render_template
 from flask_login import UserMixin, login_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app.app import login_manager, mongo
+from app.plugin import login_manager, mongo
 from app.helper import mongo_to_json_response
 
 account_api_routes = Blueprint('account_api', __name__)

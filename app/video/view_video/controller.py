@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 
-from app.app import mongo
+from app.plugin import mongo
 from app.helper import mongo_to_json_response
 
 view_video_routes = Blueprint('view_videos', __name__, template_folder='.')

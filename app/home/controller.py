@@ -1,5 +1,5 @@
 from flask import Blueprint
-from app.app import app
+from app.plugin import app
 
 home_page_routes = Blueprint('home_page', __name__)
 

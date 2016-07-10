@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 import os
 
-from app.app import app, mongo
+from app.plugin import app, mongo
 from app.helper import mongo_to_json_response
 
 
