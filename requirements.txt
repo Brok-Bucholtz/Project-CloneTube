@@ -1,3 +1,4 @@
 bson
 flask
 flask-pymongo
+flask-login
