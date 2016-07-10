@@ -1,6 +1,9 @@
 from flask import Blueprint, render_template
 
+from app.app import mongo
+
 new_videos_routes = Blueprint('newest_videos', __name__, template_folder='.')
+
 
 @new_videos_routes.route("/newest_videos")
 def get_newest_video():
