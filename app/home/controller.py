@@ -1,9 +1,9 @@
-from flask import Blueprint
+from flask import Blueprint, render_template
 from app.plugin import app
 
-home_page_routes = Blueprint('home_page', __name__)
+home_page_routes = Blueprint('home_page', __name__, template_folder='asset')
 
 
 @app.route('/')
 def home_page():
-    return "Welcome!"
+    return render_template('index.html')
