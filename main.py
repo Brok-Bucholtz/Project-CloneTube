@@ -1,5 +1,4 @@
-from bson import json_util
-from flask import Flask, request, Response, render_template, send_from_directory
+from flask import Flask, request, render_template, send_from_directory
 from flask_login import LoginManager, UserMixin, login_user
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -7,6 +6,7 @@ from werkzeug.utils import secure_filename
 import os
 
 from app.account.controller import account_routes
+from app.helper import mongo_to_json_response
 
 app = Flask(__name__)
 mongo = PyMongo(app)
@@ -46,10 +46,6 @@ class User(UserMixin):
         return User(user_id)
 
 
-def _mongo_to_json_response(mongo):
-    return Response(json_util.dumps(mongo, indent=4, sort_keys=True), mimetype="application/json")
-
-
 @login_manager.user_loader
 def _login_manager_load_user(user_id):
     return User.get(user_id)
@@ -77,32 +73,32 @@ def get_newest_video():
 
 @app.route('/api/v1/videos/<int:video_id>/comments')
 def get_video_comments(video_id):
-    return _mongo_to_json_response(mongo.db.comments.find({'video_id': video_id}))
+    return mongo_to_json_response(mongo.db.comments.find({'video_id': video_id}))
 
 
 @app.route('/api/v1/videos/<int:video_id>/comments', methods=['POST'])
 def post_video_comments(video_id):
     comment = request.get_json()
     comment['video_id'] = video_id
-    return _mongo_to_json_response(mongo.db.comments.insert(comment))
+    return mongo_to_json_response(mongo.db.comments.insert(comment))
 
 
 @app.route('/home/videos/video_data/<int:video_id>')
 def get_video_data(video_id):
-    return _mongo_to_json_response(mongo.db.videos.find({'video_id': video_id}))
+    return mongo_to_json_response(mongo.db.videos.find({'video_id': video_id}))
 
 
 @app.route('/home/users/<int:user_id>')
 def get_user_subscription_videos(user_id):
     subscriptions = mongo.db.users.find({'user_id': user_id}, {'subscriptions': 1})
-    return _mongo_to_json_response(mongo.db.subscriptions.find().sort({'_id':-1}))
+    return mongo_to_json_response(mongo.db.subscriptions.find().sort({'_id':-1}))
 
 
 @app.route('/api/v1/users', methods=['POST'])
 def post_user():
     user = request.get_json()
     user['password'] = generate_password_hash(user['password'])
-    return _mongo_to_json_response(mongo.db.users.insert(user))
+    return mongo_to_json_response(mongo.db.users.insert(user))
 
 
 @app.route('/api/v1/users/login', methods=['POST'])
