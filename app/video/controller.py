@@ -9,11 +9,7 @@ from app.helper import mongo_to_json_response
 
 video_api_routes = Blueprint('video_api', __name__)
 
-UPLOAD_FOLDER = 'static/data'
 ALLOWED_EXTENSIONS = set(['mp4', '3gp', 'ogg'])
-
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
