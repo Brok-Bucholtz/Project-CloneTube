@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="{{ url_for('.static', filename='login.js') }}" async></script>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    <form>
+        <label>User Name</label><br/>
+        <input id="username" name="username"><br/>
+        <label>Password</label><br/>
+        <input id="password" name="password" type="password"><br/>
+        <input type="button" value="Submit" onclick="login();">
+    </form>
+</body>
+</html>

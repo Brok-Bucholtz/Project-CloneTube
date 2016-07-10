@@ -5,12 +5,13 @@ import os
 from app.app import app, mongo
 from app.account.controller import account_page_routes
 from app.helper import mongo_to_json_response
-from app.authentication.controller import authentication_api_routes
+from app.authentication.controller import authentication_api_routes, authentication_page_routes
 from app.video.newest_videos.controller import new_videos_routes
 from app.video.view_video.controller import view_video_routes
 
 
 app.register_blueprint(account_page_routes, url_prefix='/account')
+app.register_blueprint(authentication_page_routes, url_prefix='/authentication')
 app.register_blueprint(authentication_api_routes, url_prefix='/api/v1/authentication')
 app.register_blueprint(new_videos_routes, url_prefix="/api/v1/video/")
 app.register_blueprint(view_video_routes, url_prefix="/api/v1/video/")

@@ -1,11 +1,12 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, render_template
 from flask_login import UserMixin, login_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.app import login_manager, mongo
 from app.helper import mongo_to_json_response
 
-authentication_api_routes = Blueprint('authentication_api', __name__, template_folder='.')
+authentication_api_routes = Blueprint('authentication_api', __name__)
+authentication_page_routes = Blueprint('authentication_page', __name__, template_folder='asset', static_folder='asset')
 
 
 class User(UserMixin):
@@ -38,3 +39,8 @@ def post_user_login():
         login_user(User(mongo_user['_id']))
         return 'Success'
     return 'Failure'
+
+
+@authentication_page_routes.route('/login')
+def login():
+    return render_template('login.html')
